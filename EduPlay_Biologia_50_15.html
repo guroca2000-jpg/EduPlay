@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EduPlay - Plataforma interativa de aprendizagem em Biologia para o Ensino Médio.">
+  <title>EduPlay | Aprender Jogando</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #f8f9fd;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --bg-subtle: #f0edf9;
+      --ink: #1e1e38;
+      --muted: #6c6f8a;
+      --line: #e6e5f3;
+      --purple: #6c5ce7;
+      --purple-hover: #5b4cc4;
+      --purple-light: #eeeaff;
+      --green: #10ac84;
+      --green-bg: #e6f9f4;
+      --red: #ee5253;
+      --red-bg: #ffeae9;
+      --orange: #ff9f43;
+      --orange-bg: #fff4e6;
+      --shadow: 0 12px 40px rgba(45, 37, 100, 0.08);
+      --shadow-hover: 0 20px 50px rgba(45, 37, 100, 0.14);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #0f0f1a;
+      --bg-surface: #181828;
+      --bg-card: #1f1f33;
+      --bg-subtle: #292946;
+      --ink: #f1f1f9;
+      --muted: #9da1c0;
+      --line: #2e2e4a;
+      --purple-light: #2b274c;
+      --green-bg: #11362d;
+      --red-bg: #3d1b1c;
+      --orange-bg: #3d2b17;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-body);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+
+    /* Header & Nav */
+    .topbar {
+      height: 76px;
+      padding: 0 max(calc((100% - 1200px)/2), 24px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      transition: var(--transition);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font: 900 24px 'Nunito', sans-serif;
+      letter-spacing: -0.8px;
+      cursor: pointer;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--purple), #a29bfe);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      box-shadow: 0 6px 16px rgba(108, 92, 231, 0.35);
+    }
+
+    .brand-accent { color: var(--purple); }
+
+    .nav-links { display: flex; gap: 8px; }
+    .nav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      color: var(--purple);
+      background: var(--bg-subtle);
+    }
+
+    .nav-actions { display: flex; align-items: center; gap: 14px; }
+
+    /* Dark mode toggle switch */
+    .theme-toggle {
+      background: var(--bg-subtle);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: 4px;
+      width: 58px;
+      height: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .theme-toggle span { font-size: 14px; z-index: 1; }
+    .theme-ball {
+      position: absolute;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--purple);
+      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    [data-theme="dark"] .theme-ball { transform: translateX(28px); }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--bg-subtle);
+      padding: 6px 12px;
+      border-radius: 30px;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 12px 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: var(--purple);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+    }
+
+    .btn-primary:hover { background: var(--purple-hover); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .btn-ghost:hover { background: var(--bg-subtle); }
+
+    .btn-dark { background: var(--ink); color: var(--bg-body); }
+    .btn-small { padding: 8px 14px; font-size: 12px; border-radius: 8px; }
+    .full-width { width: 100%; }
+
+    /* Containers */
+    .section-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; width: 100%; }
+    .page-section { display: none; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+    .page-section.active { display: block; opacity: 1; transform: translateY(0); }
+
+    /* Hero Section */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 50px;
+      padding: 60px 24px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px var(--green-bg);
+    }
+
+    .hero h1 {
+      font: 900 clamp(36px, 4.5vw, 56px)/1.1 'Nunito', sans-serif;
+      letter-spacing: -1.5px;
+      margin-bottom: 18px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg, var(--purple), #a29bfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-lead {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 500px;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions { display: flex; gap: 14px; }
+
+    .hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      position: relative;
+    }
+
+    .mascot { font-size: 72px; margin: 15px 0; filter: drop-shadow(0 10px 15px rgba(108, 92, 231, 0.2)); }
+    .progress-bar-wrap { margin-top: 15px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+    .track { height: 8px; background: var(--bg-subtle); border-radius: 10px; overflow: hidden; }
+    .fill { height: 100%; background: linear-gradient(90deg, var(--purple), #a29bfe); border-radius: 10px; }
+
+    /* Features / Activity Grid */
+    .activities-section { padding: 40px 24px 70px; }
+    .section-heading { margin-bottom: 30px; text-align: center; }
+    .section-heading h2 { font: 900 32px 'Nunito', sans-serif; }
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .activity-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .activity-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+
+    .activity-banner {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+    }
+
+    .bg-purple { background: linear-gradient(135deg, #a29bfe, var(--purple)); }
+    .bg-orange { background: linear-gradient(135deg, #ffeaa7, var(--orange)); }
+    .bg-green { background: linear-gradient(135deg, #55efc4, var(--green)); }
+
+    .activity-content { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+    .activity-content h3 { font: 900 18px 'Nunito', sans-serif; margin-bottom: 8px; }
+    .activity-content p { font-size: 13px; color: var(--muted); margin-bottom: 20px; flex: 1; }
+
+    /* Quiz Container */
+    .quiz-section {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 40px;
+      align-items: start;
+      padding: 50px 24px;
+    }
+
+    .quiz-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .badge-teacher {
+      background: var(--orange-bg);
+      color: var(--orange);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .question-title { font: 900 20px 'Nunito', sans-serif; margin-bottom: 20px; }
+
+    .options-grid { display: grid; gap: 10px; }
+
+    .option-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: var(--transition);
+    }
+
+    .option-btn:hover { border-color: var(--purple); background: var(--bg-subtle); }
+
+    .option-letter {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: var(--bg-subtle);
+      color: var(--purple);
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+    }
+
+    .option-btn.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+    .option-btn.wrong { border-color: var(--red); background: var(--red-bg); color: var(--red); }
+
+    .quiz-feedback {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .quiz-feedback.success { background: var(--green-bg); color: var(--green); }
+    .quiz-feedback.error { background: var(--red-bg); color: var(--red); }
+
+    .quiz-footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Subpages Shared */
+    .subpage-title { text-align: center; margin: 40px 0 30px; }
+    .subpage-title h1 { font: 900 36px 'Nunito', sans-serif; }
+    .subpage-title p { color: var(--muted); font-size: 15px; }
+
+    /* Ranking Page */
+    .podium-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 600px;
+      margin: 0 auto 35px;
+      align-items: end;
+    }
+
+    .podium-item {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 20px 10px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .podium-item.first {
+      border-color: var(--purple);
+      background: var(--purple-light);
+      padding-top: 30px;
+    }
+
+    .podium-icon { font-size: 32px; margin-bottom: 6px; }
+    .podium-name { font-weight: 800; font-size: 14px; display: block; }
+    .podium-xp { font-size: 12px; color: var(--purple); font-weight: 800; }
+
+    .ranking-list {
+      max-width: 750px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .ranking-row {
+      display: grid;
+      grid-template-columns: 50px 1fr 100px;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .ranking-row:last-child { border-bottom: none; }
+    .rank-num { font: 900 16px 'Nunito', sans-serif; color: var(--muted); }
+    .rank-user { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 14px; }
+    .rank-pts { text-align: right; font-weight: 800; color: var(--purple); font-size: 14px; }
+
+    /* Estudo em Grupo Page */
+    .groups-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      height: 600px;
+      margin-bottom: 50px;
+    }
+
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar-card h3 { font: 900 18px 'Nunito', sans-serif; margin-bottom: 15px; }
+
+    .room-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 4px;
+    }
+
+    .room-item {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--bg-surface);
+    }
+
+    .room-item:hover, .room-item.active {
+      border-color: var(--purple);
+      background: var(--bg-subtle);
+    }
+
+    .room-item h4 { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+    .room-item p { font-size: 11px; color: var(--muted); }
+
+    .chat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-surface);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: flex-col;
+      gap: 12px;
+    }
+
+    .chat-msg {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .chat-msg.sent {
+      background: var(--purple);
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+      margin-left: auto;
+    }
+
+    .chat-msg.received {
+      background: var(--bg-subtle);
+      color: var(--ink);
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+    }
+
+    .chat-author { font-size: 10px; font-weight: 800; opacity: 0.8; margin-bottom: 2px; display: block; }
+
+    .chat-input-area {
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 10px;
+      background: var(--bg-surface);
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-body);
+    }
+
+    /* Teacher Page Form */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      max-width: 800px;
+      margin: 0 auto 30px;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field label { font-size: 12px; font-weight: 800; display: block; margin-bottom: 6px; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-body);
+      color: var(--ink);
+      transition: var(--transition);
+    }
+
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--purple);
+      outline: none;
+    }
+
+    .created-questions-list {
+      max-width: 800px;
+      margin: 0 auto 40px;
+    }
+
+    .q-item {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .q-item-info b { font-size: 14px; display: block; margin-bottom: 4px; }
+    .q-item-info span { font-size: 12px; color: var(--muted); }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--line);
+      padding: 30px 24px;
+      background: var(--bg-surface);
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Modals & Toast */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 200;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-backdrop[hidden] { display: none; }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      width: min(100%, 420px);
+      box-shadow: var(--shadow-hover);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--ink);
+      color: var(--bg-body);
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+      z-index: 300;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* Responsive */
+    @media (max-width: 850px) {
+      .hero { grid-template-columns: 1fr; text-align: center; gap: 30px; }
+      .hero-actions { justify-content: center; }
+      .quiz-section { grid-template-columns: 1fr; }
+      .groups-layout { grid-template-columns: 1fr; height: auto; }
+      .chat-card { height: 450px; }
+      .topbar { padding: 0 16px; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar Header -->
+  <header class="topbar">
+    <div class="brand" onclick="navigateTo('home')">
+      <div class="brand-mark">E</div>
+      <span>Edu<span class="brand-accent">Play</span></span>
+    </div>
+
+    <nav class="nav-links">
+      <button id="nav-home" class="nav-btn active" onclick="navigateTo('home')">Início</button>
+      <button id="nav-groups" class="nav-btn" onclick="navigateTo('groups')">Estudo em Grupo</button>
+      <button id="nav-ranking" class="nav-btn" onclick="navigateTo('ranking')">Ranking</button>
+      <button id="nav-teacher" class="nav-btn" onclick="navigateTo('teacher')">Professor</button>
+    </nav>
+
+    <div class="nav-actions">
+      <!-- Dark Mode Switch -->
+      <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+        <span>☀️</span>
+        <span>🌙</span>
+        <div class="theme-ball"></div>
+      </button>
+
+      <div class="user-badge">
+        <div class="avatar" id="userAvatar">A</div>
+        <span id="navUserName">Visitante</span>
+      </div>
+
+      <button class="btn btn-primary btn-small" id="loginBtn">Entrar</button>
+    </div>
+  </header>
+
+  <!-- CONTENT PAGES -->
+  <main>
+
+    <!-- PAGE 1: INÍCIO / QUIZ -->
+    <div id="page-home" class="page-section active">
+      <section class="section-wrap hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="pulse"></span> APRENDIZADO GAMIFICADO DE BIOLOGIA</div>
+          <h1>Domine a <span class="gradient-text">Biologia</span> no seu ritmo.</h1>
+          <p class="hero-lead">Responda a perguntas do Ensino Médio, ganhe XP, dispute posições no ranking e tire dúvidas em grupos de estudo com sua turma.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="scrollToQuiz()">Iniciar Desafio 🚀</button>
+            <button class="btn btn-ghost" onclick="navigateTo('groups')">Salas de Estudo 🤝</button>
+          </div>
+        </div>
+        
+        <div class="hero-card">
+          <div class="mascot">🧪</div>
+          <h3 style="font: 900 22px 'Nunito';">Nível 1 - Aprendiz</h3>
+          <p style="font-size: 13px; color: var(--muted); margin-top: 4px;">Continue praticando para evoluir!</p>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span>Progresso Atual</span><b id="heroXpText">0 XP</b></div>
+            <div class="track"><div class="fill" id="heroXpBar" style="width: 10%;"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Grade de Destaques -->
+      <section class="section-wrap activities-section">
+        <div class="section-heading">
+          <h2>Recursos da <span class="gradient-text">Plataforma</span></h2>
+        </div>
+        <div class="activity-grid">
+          <div class="activity-card">
+            <div class="activity-banner bg-purple">🧩</div>
+            <div class="activity-content">
+              <h3>Quiz Interativo</h3>
+              <p>Questões de Biologia preparadas para o vestibular e ENEM com feedback imediato.</p>
+              <button class="btn btn-dark btn-small" onclick="scrollToQuiz()">Praticar Agora →</button>
+            </div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-banner bg-green">👥</div>
+            <div class="activity-content">
+              <h3>Estudo em Grupo</h3>
+              <p>Crie e entre em salas virtuais para discutir matérias e colaborar em tempo real.</p>
+              <button class="btn btn-dark btn-small" onclick="navigateTo('groups')">Acessar Salas →</button>
+            </div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-banner bg-orange">👨‍🏫</div>
+            <div class="activity-content">
+              <h3>Área do Professor</h3>
+              <p>Professores podem cadastrar novas perguntas e gerar folhas de atividades para impressão.</p>
+              <button class="btn btn-dark btn-small" onclick="navigateTo('teacher')">Painel Pedagógico →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quiz Section -->
+      <section class="section-wrap quiz-section" id="quizContainer">
+        <div>
+          <div class="eyebrow">DESAFIO PRÁTICO</div>
+          <h2 style="font: 900 36px 'Nunito'; margin-bottom: 12px;">Testes de <span class="gradient-text">Biologia</span></h2>
+          <p style="color: var(--muted); font-size: 14px; line-height: 1.6;">As perguntas criadas por professores aparecem automaticamente no início da fila! Responda corretamente para pontuar.</p>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin: 18px 0;">
+          <button class="btn btn-primary" id="longQuizTab" type="button">📚 Muitas perguntas · 50</button>
+          <button class="btn btn-dark" id="shortQuizTab" type="button">⚡ Poucas perguntas · 15</button>
+        </div>
+        <div class="quiz-card" id="longQuizWindow">
+          <div class="quiz-header"><span id="longQuizBadge">QUIZ COMPLETO DE BIOLOGIA</span><span id="longQuizProgress">01 / 50</span></div>
+          <h3 class="question-title" id="longQuestionText">Carregando pergunta...</h3>
+          <div class="options-grid" id="longOptions"></div>
+          <div class="quiz-feedback" id="longFeedback" hidden></div>
+          <div class="quiz-footer"><span style="font-size:12px;color:var(--muted);">Desafio completo com 50 perguntas.</span><button class="btn btn-primary btn-small" id="longNext" disabled>Próxima →</button></div>
+        </div>
+        <div class="quiz-card" id="shortQuizWindow" hidden>
+          <div class="quiz-header"><span id="shortQuizBadge">QUIZ RÁPIDO DE BIOLOGIA</span><span id="shortQuizProgress">01 / 15</span></div>
+          <h3 class="question-title" id="shortQuestionText">Carregando pergunta...</h3>
+          <div class="options-grid" id="shortOptions"></div>
+          <div class="quiz-feedback" id="shortFeedback" hidden></div>
+          <div class="quiz-footer"><span style="font-size:12px;color:var(--muted);">Revisão rápida com 15 perguntas.</span><button class="btn btn-primary btn-small" id="shortNext" disabled>Próxima →</button></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- PAGE 2: ESTUDO EM GRUPO -->
+    <div id="page-groups" class="page-section">
+      <div class="section-wrap subpage-title">
+        <div class="eyebrow" style="justify-content: center;"><span class="pulse"></span> APRENDER EM EQUIPE</div>
+        <h1>Salas de <span class="gradient-text">Estudo Coletivo</span></h1>
+        <p>Junte-se a uma sala temática para debater conteúdos de Biologia ou crie a sua própria sala.</p>
+      </div>
+
+      <div class="section-wrap groups-layout">
+        <!-- Sidebar: Salas -->
+        <div class="sidebar-card">
+          <h3>Salas Ativas</h3>
+          <div class="room-list" id="roomList"></div>
+          <button class="btn btn-primary full-width" style="margin-top: 15px;" onclick="openCreateRoomModal()">+ Criar Nova Sala</button>
+        </div>
+
+        <!-- Chat Principal da Sala -->
+        <div class="chat-card">
+          <div class="chat-header">
+            <div>
+              <h4 id="activeRoomTitle" style="font-weight: 800;">Selecione uma sala</h4>
+              <p id="activeRoomDesc" style="font-size: 11px; color: var(--muted);">Conecte-se para interagir</p>
+            </div>
+            <span style="font-size: 12px; font-weight: 800; color: var(--green);" id="activeRoomCount">● 1 online</span>
+          </div>
+
+          <div class="chat-messages" id="chatMessages">
+            <div style="text-align: center; color: var(--muted); margin-top: 50px; font-size: 13px;">Selecione ou crie uma sala para começar a conversar!</div>
+          </div>
+
+          <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Digite sua dúvida ou comentário..." onkeypress="handleChatEnter(event)">
+            <button class="btn btn-primary btn-small" onclick="sendChatMessage()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: RANKING -->
+    <div id="page-ranking" class="page-section">
+      <div class="section-wrap subpage-title">
+        <div class="eyebrow" style="justify-content: center;">CLASSIFICAÇÃO GERAL</div>
+        <h1>Ranking dos <span class="gradient-text">Estudantes</span></h1>
+        <p id="studentCountText">Carregando ranking...</p>
+      </div>
+
+      <div class="section-wrap">
+        <div class="podium-container" id="podiumContainer"></div>
+        <div class="ranking-list" id="rankingList"></div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: PAINEL DO PROFESSOR -->
+    <div id="page-teacher" class="page-section">
+      <div class="section-wrap subpage-title">
+        <div class="eyebrow" style="justify-content: center;">ÁREA PEDAGÓGICA</div>
+        <h1>Painel do <span class="gradient-text">Professor</span></h1>
+        <p>Cadastre questões ativas para o quiz online ou prepare materiais impressos com gabarito.</p>
+      </div>
+
+      <div class="section-wrap">
+        <div class="form-card">
+          <h2 style="font: 900 22px 'Nunito'; margin-bottom: 20px;">Criar Nova Pergunta</h2>
+          <form id="teacherForm">
+            <div class="field">
+              <label for="teacherPrompt">Enunciado / Pergunta</label>
+              <textarea id="teacherPrompt" rows="3" placeholder="Ex.: Qual organela é responsável pela produção de ATP na célula?" required></textarea>
+            </div>
+
+            <div class="field">
+              <label for="teacherType">Tipo de Questão</label>
+              <select id="teacherType" onchange="toggleTeacherFields()">
+                <option value="choice">Múltipla Escolha (Online e Impresso)</option>
+                <option value="written">Resposta Escrita (Exclusivo para Impressão)</option>
+              </select>
+            </div>
+
+            <div id="teacherChoiceGroup">
+              <div class="field"><label for="optA">Alternativa A</label><input type="text" id="optA" placeholder="Opção A"></div>
+              <div class="field"><label for="optB">Alternativa B</label><input type="text" id="optB" placeholder="Opção B"></div>
+              <div class="field"><label for="optC">Alternativa C</label><input type="text" id="optC" placeholder="Opção C"></div>
+              <div class="field"><label for="optD">Alternativa D</label><input type="text" id="optD" placeholder="Opção D"></div>
+              
+              <div class="field">
+                <label for="correctOpt">Gabarito (Opção Correta)</label>
+                <select id="correctOpt">
+                  <option value="0">Alternativa A</option>
+                  <option value="1">Alternativa B</option>
+                  <option value="2">Alternativa C</option>
+                  <option value="3">Alternativa D</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="teacherExplanation">Explicação Pedagógica (Feedback do Quiz)</label>
+              <input type="text" id="teacherExplanation" placeholder="Explicativo curto exibido ao responder">
+            </div>
+
+            <button type="submit" class="btn btn-primary full-width">Salvar e Publicar Questão</button>
+          </form>
+        </div>
+
+        <!-- Lista de Criadas -->
+        <div class="created-questions-list">
+          <h3 style="font: 900 20px 'Nunito'; margin-bottom: 15px;">Perguntas Cadastradas</h3>
+          <div id="teacherQuestionsList"></div>
+
+          <div style="margin-top: 25px; background: var(--bg-card); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--line);">
+            <h4 style="font-weight: 800; margin-bottom: 10px;">Gerar Atividade Impressa (PDF)</h4>
+            <div class="field">
+              <label for="printTitle">Título da Prova / Atividade</label>
+              <input type="text" id="printTitle" value="Avaliação de Biologia - Ensino Médio">
+            </div>
+            <button class="btn btn-primary" onclick="generatePrintablePDF()">Imprimir Folha de Questões</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="section-wrap">
+      <p>© 2026 EduPlay • Plataforma Educacional de Biologia para o Ensino Médio.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL: LOGIN / CADASTRO DE ALUNO -->
+  <div class="modal-backdrop" id="loginModal" hidden>
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+      <h2 style="font: 900 24px 'Nunito'; margin-bottom: 8px;">Identifique-se</h2>
+      <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">Digite seu nome para salvar seus pontos no ranking.</p>
+      
+      <form id="studentLoginForm">
+        <div class="field">
+          <label for="studentNameInput">Seu Nome Completo</label>
+          <input type="text" id="studentNameInput" placeholder="Ex.: Maria Souza" required>
+        </div>
+        <div class="field">
+          <label for="studentEmailInput">E-mail</label>
+          <input type="email" id="studentEmailInput" placeholder="maria@escola.com" required>
+        </div>
+        <button class="btn btn-primary full-width" type="submit">Salvar Perfil</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CRIAR SALA DE ESTUDO -->
+  <div class="modal-backdrop" id="createRoomModal" hidden>
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('createRoomModal')">×</button>
+      <h2 style="font: 900 24px 'Nunito'; margin-bottom: 8px;">Nova Sala de Estudo</h2>
+      <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">Crie um grupo temático para estudar com sua turma.</p>
+      
+      <form id="createRoomForm">
+        <div class="field">
+          <label for="roomNameInput">Nome da Sala</label>
+          <input type="text" id="roomNameInput" placeholder="Ex.: Revisão para o ENEM - Genética" required>
+        </div>
+        <div class="field">
+          <label for="roomDescInput">Tópico principal</label>
+          <input type="text" id="roomDescInput" placeholder="Ex.: DNA, RNA e hereditariedade" required>
+        </div>
+        <button class="btn btn-primary full-width" type="submit">Criar Sala</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">Notificação</div>
+
+  <script>
+    /* ==========================================================================
+       ESTADO GLOBAL & LOCALSTORAGE
+       ========================================================================== */
+    const STORAGE_KEYS = {
+      THEME: 'eduplay_theme',
+      STUDENTS: 'eduplay_students_v4',
+      CURRENT_USER: 'eduplay_current_user_v4',
+      TEACHER_QUESTIONS: 'eduplay_teacher_questions_v4',
+      STUDY_ROOMS: 'eduplay_rooms_v4',
+      CHAT_MESSAGES: 'eduplay_chat_messages_v4'
+    };
+
+    // 50 Perguntas Padrão de Biologia do Ensino Médio
+    const defaultBiologyQuestions = [
+      {
+            "id": "def_1",
+            "prompt": "Qual organela celular é responsável pela produção de energia na forma de ATP?",
+            "options": [
+                  "Ribossomo",
+                  "Mitocôndria",
+                  "Lisossomo",
+                  "Complexo golgiense"
+            ],
+            "correct": 1,
+            "explanation": "A mitocôndria realiza a respiração celular e produz grande parte do ATP utilizado pela célula.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_2",
+            "prompt": "Qual molécula armazena a informação genética dos seres vivos?",
+            "options": [
+                  "Glicose",
+                  "ATP",
+                  "DNA",
+                  "Lipídio"
+            ],
+            "correct": 2,
+            "explanation": "O DNA contém as instruções genéticas que orientam o desenvolvimento e o funcionamento dos organismos.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_3",
+            "prompt": "Como é chamado o processo pelo qual as plantas produzem matéria orgânica utilizando luz?",
+            "options": [
+                  "Fermentação",
+                  "Fotossíntese",
+                  "Respiração",
+                  "Transpiração"
+            ],
+            "correct": 1,
+            "explanation": "Na fotossíntese, organismos como as plantas utilizam energia luminosa para produzir matéria orgânica.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_4",
+            "prompt": "Qual estrutura controla a entrada e a saída de substâncias da célula?",
+            "options": [
+                  "Membrana plasmática",
+                  "Parede celular",
+                  "Núcleo",
+                  "Citoplasma"
+            ],
+            "correct": 0,
+            "explanation": "A membrana plasmática delimita a célula e controla seletivamente a passagem de substâncias.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_5",
+            "prompt": "Qual é a unidade básica estrutural e funcional dos seres vivos?",
+            "options": [
+                  "Órgão",
+                  "Tecido",
+                  "Célula",
+                  "Sistema"
+            ],
+            "correct": 2,
+            "explanation": "A célula é a menor unidade estrutural e funcional dos seres vivos.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_6",
+            "prompt": "Em qual organela ocorre a fotossíntese nas células vegetais?",
+            "options": [
+                  "Mitocôndria",
+                  "Cloroplasto",
+                  "Ribossomo",
+                  "Lisossomo"
+            ],
+            "correct": 1,
+            "explanation": "Os cloroplastos possuem clorofila e são os principais locais onde ocorre a fotossíntese.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_7",
+            "prompt": "Qual relação ecológica ocorre quando um organismo se beneficia e o outro é prejudicado?",
+            "options": [
+                  "Mutualismo",
+                  "Comensalismo",
+                  "Parasitismo",
+                  "Colônia"
+            ],
+            "correct": 2,
+            "explanation": "No parasitismo, o parasita obtém recursos do hospedeiro, causando prejuízo a ele.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_8",
+            "prompt": "Qual divisão celular é responsável pela formação de gametas?",
+            "options": [
+                  "Mitose",
+                  "Meiose",
+                  "Bipartição",
+                  "Cissiparidade"
+            ],
+            "correct": 1,
+            "explanation": "A meiose reduz à metade o número de cromossomos e participa da formação dos gametas.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_9",
+            "prompt": "Qual sistema do corpo humano é responsável pelo transporte de sangue?",
+            "options": [
+                  "Digestório",
+                  "Respiratório",
+                  "Circulatório",
+                  "Nervoso"
+            ],
+            "correct": 2,
+            "explanation": "O sistema circulatório, formado pelo coração e vasos sanguíneos, transporta o sangue pelo corpo.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_10",
+            "prompt": "Em uma cadeia alimentar, como são chamados os organismos que produzem seu próprio alimento?",
+            "options": [
+                  "Consumidores",
+                  "Decompositores",
+                  "Predadores",
+                  "Produtores"
+            ],
+            "correct": 3,
+            "explanation": "Os produtores, como plantas e algas, produzem matéria orgânica e formam a base de muitas cadeias alimentares.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_11",
+            "prompt": "Qual estrutura celular contém a maior parte do material genético das células eucarióticas?",
+            "options": [
+                  "Núcleo",
+                  "Vacúolo",
+                  "Parede celular",
+                  "Centríolo"
+            ],
+            "correct": 0,
+            "explanation": "O núcleo abriga os cromossomos e coordena diversas atividades celulares.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_12",
+            "prompt": "Qual é a principal função dos ribossomos?",
+            "options": [
+                  "Produzir lipídios",
+                  "Realizar a digestão celular",
+                  "Sintetizar proteínas",
+                  "Armazenar água"
+            ],
+            "correct": 2,
+            "explanation": "Os ribossomos fazem a síntese de proteínas a partir das informações do RNA mensageiro.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_13",
+            "prompt": "Qual componente do sangue atua principalmente na defesa do organismo?",
+            "options": [
+                  "Hemácias",
+                  "Leucócitos",
+                  "Plaquetas",
+                  "Plasma"
+            ],
+            "correct": 1,
+            "explanation": "Os leucócitos são células de defesa que participam das respostas do sistema imunológico.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_14",
+            "prompt": "Qual vitamina é produzida na pele com a participação da luz solar?",
+            "options": [
+                  "Vitamina C",
+                  "Vitamina B12",
+                  "Vitamina D",
+                  "Vitamina K"
+            ],
+            "correct": 2,
+            "explanation": "A exposição à radiação UVB participa da síntese de vitamina D na pele.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_15",
+            "prompt": "Qual órgão é responsável por bombear o sangue pelo corpo?",
+            "options": [
+                  "Pulmão",
+                  "Fígado",
+                  "Rim",
+                  "Coração"
+            ],
+            "correct": 3,
+            "explanation": "O coração funciona como uma bomba muscular que impulsiona o sangue.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_16",
+            "prompt": "Como se chama o conjunto de indivíduos da mesma espécie que vivem em uma mesma área?",
+            "options": [
+                  "Comunidade",
+                  "População",
+                  "Ecossistema",
+                  "Biosfera"
+            ],
+            "correct": 1,
+            "explanation": "População é o conjunto de indivíduos da mesma espécie que ocupa determinada área.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_17",
+            "prompt": "Qual nível ecológico reúne diferentes populações que vivem e interagem em uma área?",
+            "options": [
+                  "Comunidade",
+                  "Organismo",
+                  "Órgão",
+                  "Espécie"
+            ],
+            "correct": 0,
+            "explanation": "Uma comunidade é formada por populações de espécies diferentes que convivem em uma área.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_18",
+            "prompt": "Qual gás é absorvido pelas plantas durante a fotossíntese?",
+            "options": [
+                  "Oxigênio",
+                  "Nitrogênio",
+                  "Gás carbônico",
+                  "Hidrogênio"
+            ],
+            "correct": 2,
+            "explanation": "As plantas utilizam gás carbônico e água, com energia luminosa, para produzir matéria orgânica.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_19",
+            "prompt": "Qual processo permite a passagem de água através de uma membrana semipermeável?",
+            "options": [
+                  "Osmose",
+                  "Difusão facilitada",
+                  "Fagocitose",
+                  "Exocitose"
+            ],
+            "correct": 0,
+            "explanation": "Osmose é o movimento de água através de uma membrana semipermeável.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_20",
+            "prompt": "Qual tecido vegetal transporta água e sais minerais das raízes para outras partes da planta?",
+            "options": [
+                  "Floema",
+                  "Epiderme",
+                  "Xilema",
+                  "Meristema"
+            ],
+            "correct": 2,
+            "explanation": "O xilema conduz a seiva bruta, composta principalmente por água e sais minerais.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_21",
+            "prompt": "Qual tecido vegetal transporta açúcares produzidos na fotossíntese?",
+            "options": [
+                  "Xilema",
+                  "Floema",
+                  "Colênquima",
+                  "Súber"
+            ],
+            "correct": 1,
+            "explanation": "O floema distribui a seiva elaborada, rica em substâncias orgânicas.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_22",
+            "prompt": "Como são chamados os animais que possuem coluna vertebral?",
+            "options": [
+                  "Invertebrados",
+                  "Artrópodes",
+                  "Moluscos",
+                  "Vertebrados"
+            ],
+            "correct": 3,
+            "explanation": "Vertebrados são animais que possuem coluna vertebral e crânio.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_23",
+            "prompt": "Qual grupo de seres vivos é formado por organismos procariontes?",
+            "options": [
+                  "Bactérias",
+                  "Fungos",
+                  "Animais",
+                  "Plantas"
+            ],
+            "correct": 0,
+            "explanation": "As bactérias são procariontes, pois não possuem núcleo delimitado por membrana.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_24",
+            "prompt": "Qual é a função principal dos alvéolos pulmonares?",
+            "options": [
+                  "Produzir hormônios",
+                  "Realizar trocas gasosas",
+                  "Filtrar o sangue",
+                  "Produzir bile"
+            ],
+            "correct": 1,
+            "explanation": "Nos alvéolos ocorre a troca de oxigênio e gás carbônico entre o ar e o sangue.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_25",
+            "prompt": "Qual órgão produz a bile, substância que auxilia na digestão de gorduras?",
+            "options": [
+                  "Estômago",
+                  "Pâncreas",
+                  "Fígado",
+                  "Intestino grosso"
+            ],
+            "correct": 2,
+            "explanation": "O fígado produz a bile, que é armazenada na vesícula biliar.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_26",
+            "prompt": "Qual estrutura do sistema nervoso coordena movimentos e equilíbrio?",
+            "options": [
+                  "Cerebelo",
+                  "Medula óssea",
+                  "Hipófise",
+                  "Tireoide"
+            ],
+            "correct": 0,
+            "explanation": "O cerebelo participa da coordenação dos movimentos, postura e equilíbrio.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_27",
+            "prompt": "Qual hormônio ajuda a reduzir a quantidade de glicose no sangue?",
+            "options": [
+                  "Adrenalina",
+                  "Insulina",
+                  "Tiroxina",
+                  "Glucagon"
+            ],
+            "correct": 1,
+            "explanation": "A insulina facilita a entrada de glicose em várias células e contribui para diminuir a glicemia.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_28",
+            "prompt": "Qual é a função das plaquetas no sangue?",
+            "options": [
+                  "Transportar oxigênio",
+                  "Produzir anticorpos",
+                  "Atuar na coagulação",
+                  "Levar nutrientes"
+            ],
+            "correct": 2,
+            "explanation": "As plaquetas participam da coagulação e ajudam a conter sangramentos.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_29",
+            "prompt": "Qual tipo de reprodução envolve a união de gametas?",
+            "options": [
+                  "Assexuada",
+                  "Brotamento",
+                  "Fragmentação",
+                  "Sexuada"
+            ],
+            "correct": 3,
+            "explanation": "A reprodução sexuada envolve a união de gametas e geralmente promove variabilidade genética.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_30",
+            "prompt": "Qual molécula transporta a informação do DNA até os ribossomos?",
+            "options": [
+                  "RNA mensageiro",
+                  "Glicogênio",
+                  "Colesterol",
+                  "ATP"
+            ],
+            "correct": 0,
+            "explanation": "O RNA mensageiro leva a informação genética que orienta a produção de proteínas.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_31",
+            "prompt": "Como é chamada a variante de um gene?",
+            "options": [
+                  "Cromátide",
+                  "Alelo",
+                  "Centrômero",
+                  "Gameta"
+            ],
+            "correct": 1,
+            "explanation": "Alelos são versões alternativas de um mesmo gene.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_32",
+            "prompt": "Qual cientista é conhecido por propor as leis básicas da hereditariedade a partir de experimentos com ervilhas?",
+            "options": [
+                  "Charles Darwin",
+                  "Louis Pasteur",
+                  "Gregor Mendel",
+                  "Robert Hooke"
+            ],
+            "correct": 2,
+            "explanation": "Gregor Mendel realizou cruzamentos com ervilhas e formulou princípios fundamentais da hereditariedade.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_33",
+            "prompt": "Quantos cromossomos existem normalmente em uma célula somática humana?",
+            "options": [
+                  "23",
+                  "44",
+                  "46",
+                  "48"
+            ],
+            "correct": 2,
+            "explanation": "As células somáticas humanas normalmente possuem 46 cromossomos, organizados em 23 pares.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_34",
+            "prompt": "Qual processo celular origina duas células-filhas geneticamente semelhantes à célula-mãe?",
+            "options": [
+                  "Meiose",
+                  "Mitose",
+                  "Fecundação",
+                  "Transcrição"
+            ],
+            "correct": 1,
+            "explanation": "A mitose gera duas células-filhas com, em geral, o mesmo número de cromossomos da célula original.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_35",
+            "prompt": "Qual estrutura presente nas células vegetais confere sustentação e proteção?",
+            "options": [
+                  "Membrana nuclear",
+                  "Parede celular",
+                  "Lisossomo",
+                  "Centríolo"
+            ],
+            "correct": 1,
+            "explanation": "A parede celular vegetal, rica em celulose, ajuda na sustentação e proteção.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_36",
+            "prompt": "Qual reino reúne organismos como cogumelos e leveduras?",
+            "options": [
+                  "Animalia",
+                  "Plantae",
+                  "Fungi",
+                  "Protista"
+            ],
+            "correct": 2,
+            "explanation": "Cogumelos e leveduras pertencem ao reino Fungi.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_37",
+            "prompt": "Qual é o nome dado à sequência de transferência de matéria e energia entre organismos?",
+            "options": [
+                  "Ciclo celular",
+                  "Cadeia alimentar",
+                  "Sucessão ecológica",
+                  "Teia genética"
+            ],
+            "correct": 1,
+            "explanation": "A cadeia alimentar representa relações de alimentação e transferência de energia.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_38",
+            "prompt": "Qual grupo de organismos decompõe restos de seres vivos e recicla nutrientes?",
+            "options": [
+                  "Produtores",
+                  "Consumidores primários",
+                  "Decompositores",
+                  "Predadores"
+            ],
+            "correct": 2,
+            "explanation": "Fungos e bactérias decompositores transformam matéria orgânica e devolvem nutrientes ao ambiente.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_39",
+            "prompt": "O que acontece com a energia disponível ao longo dos níveis tróficos?",
+            "options": [
+                  "Aumenta sempre",
+                  "Permanece igual",
+                  "Diminui",
+                  "Desaparece totalmente no produtor"
+            ],
+            "correct": 2,
+            "explanation": "Parte da energia é dissipada em cada transferência, por isso menos energia chega aos níveis tróficos seguintes.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_40",
+            "prompt": "Qual bioma brasileiro é conhecido por sua vegetação adaptada à seca e por plantas como cactos?",
+            "options": [
+                  "Amazônia",
+                  "Caatinga",
+                  "Pampa",
+                  "Pantanal"
+            ],
+            "correct": 1,
+            "explanation": "A Caatinga apresenta clima semiárido e espécies adaptadas à escassez de água.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_41",
+            "prompt": "Qual camada da atmosfera concentra a maior parte do ozônio que absorve radiação ultravioleta?",
+            "options": [
+                  "Troposfera",
+                  "Estratosfera",
+                  "Mesosfera",
+                  "Termosfera"
+            ],
+            "correct": 1,
+            "explanation": "A camada de ozônio está principalmente na estratosfera e absorve grande parte da radiação UV nociva.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_42",
+            "prompt": "Qual doença é causada por um vírus e pode ser prevenida por vacinação?",
+            "options": [
+                  "Tuberculose",
+                  "Dengue",
+                  "Cólera",
+                  "Tétano"
+            ],
+            "correct": 1,
+            "explanation": "A dengue é causada por um vírus transmitido principalmente pelo mosquito Aedes aegypti; há vacinação em contextos indicados.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_43",
+            "prompt": "Qual organismo é o vetor da malária?",
+            "options": [
+                  "Mosquito Anopheles",
+                  "Mosquito Aedes",
+                  "Mosca doméstica",
+                  "Carrapato"
+            ],
+            "correct": 0,
+            "explanation": "A malária é transmitida pela picada da fêmea do mosquito do gênero Anopheles infectada pelo parasita.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_44",
+            "prompt": "Qual célula do sangue transporta oxigênio por meio da hemoglobina?",
+            "options": [
+                  "Leucócito",
+                  "Hemácia",
+                  "Plaqueta",
+                  "Neurônio"
+            ],
+            "correct": 1,
+            "explanation": "As hemácias contêm hemoglobina, proteína que se liga ao oxigênio.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_45",
+            "prompt": "Qual é a principal função dos rins?",
+            "options": [
+                  "Produzir bile",
+                  "Filtrar o sangue e formar urina",
+                  "Bombear sangue",
+                  "Realizar trocas gasosas"
+            ],
+            "correct": 1,
+            "explanation": "Os rins filtram o sangue, regulam água e sais e formam a urina.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_46",
+            "prompt": "Qual estrutura liga os músculos aos ossos?",
+            "options": [
+                  "Ligamento",
+                  "Tendão",
+                  "Cartilagem",
+                  "Nervo"
+            ],
+            "correct": 1,
+            "explanation": "Os tendões conectam músculos aos ossos e transmitem a força da contração.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_47",
+            "prompt": "Qual é a função dos neurônios?",
+            "options": [
+                  "Armazenar gordura",
+                  "Conduzir impulsos nervosos",
+                  "Produzir hemácias",
+                  "Digerir proteínas"
+            ],
+            "correct": 1,
+            "explanation": "Neurônios são células especializadas na recepção e transmissão de sinais nervosos.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_48",
+            "prompt": "Qual nome recebe a união do espermatozoide com o óvulo?",
+            "options": [
+                  "Ovulação",
+                  "Nidação",
+                  "Fecundação",
+                  "Menstruação"
+            ],
+            "correct": 2,
+            "explanation": "A fecundação é a união dos gametas masculino e feminino, formando o zigoto.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_49",
+            "prompt": "Qual estrutura embrionária permite trocas de nutrientes, gases e resíduos entre mãe e feto?",
+            "options": [
+                  "Placenta",
+                  "Pâncreas",
+                  "Alvéolo",
+                  "Vesícula"
+            ],
+            "correct": 0,
+            "explanation": "A placenta realiza trocas entre as circulações materna e fetal, sem misturá-las diretamente.",
+            "isTeacher": false
+      },
+      {
+            "id": "def_50",
+            "prompt": "Qual é o nome do pigmento verde que absorve luz na fotossíntese?",
+            "options": [
+                  "Melanina",
+                  "Hemoglobina",
+                  "Clorofila",
+                  "Queratina"
+            ],
+            "correct": 2,
+            "explanation": "A clorofila absorve energia luminosa e participa das reações da fotossíntese.",
+            "isTeacher": false
+      }
+];
+
+    // Salas de estudo padrões iniciais
+    const defaultRooms = [
+      { id: 'room_1', name: 'Revisão ENEM - Biologia Orgânica', desc: 'Organelas, membrana plasmática e células' },
+      { id: 'room_2', name: 'Dúvidas de Genética', desc: 'DNA, RNA e hereditariedade' },
+      { id: 'room_3', name: 'Ecologia & Meio Ambiente', desc: 'Cadeias alimentares, biomas e relações ecológicas' }
+    ];
+
+    /* ==========================================================================
+       INICIALIZAÇÃO & TEMA (DARK MODE)
+       ========================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initUser();
+      initQuiz();
+      initRooms();
+      renderTeacherQuestionsList();
+
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      document.getElementById('studentLoginForm').addEventListener('submit', handleStudentLogin);
+      document.getElementById('teacherForm').addEventListener('submit', handleTeacherSubmit);
+      document.getElementById('createRoomForm').addEventListener('submit', handleCreateRoomSubmit);
+    });
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const target = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', target);
+      localStorage.setItem(STORAGE_KEYS.THEME, target);
+    }
+
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function navigateTo(pageId) {
+      document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      const targetPage = document.getElementById(`page-${pageId}`);
+      const targetBtn = document.getElementById(`nav-${pageId}`);
+
+      if (targetPage) targetPage.classList.add('active');
+      if (targetBtn) targetBtn.classList.add('active');
+
+      window.scrollTo(0, 0);
+
+      if (pageId === 'ranking') renderRanking();
+      if (pageId === 'groups') initRooms();
+    }
+
+    function scrollToQuiz() {
+      navigateTo('home');
+      document.getElementById('quizContainer')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).hidden = true;
+    }
+
+    /* ==========================================================================
+       GESTÃO DE USUÁRIO & ALUNOS
+       ========================================================================== */
+    function getStudents() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS)) || []; }
+      catch { return []; }
+    }
+
+    function saveStudents(list) {
+      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(list));
+    }
+
+    function getCurrentUserEmail() {
+      return localStorage.getItem(STORAGE_KEYS.CURRENT_USER) || '';
+    }
+
+    function getCurrentStudent() {
+      const email = getCurrentUserEmail();
+      return getStudents().find(s => s.email === email);
+    }
+
+    function initUser() {
+      const student = getCurrentStudent();
+      const navName = document.getElementById('navUserName');
+      const avatar = document.getElementById('userAvatar');
+
+      if (student) {
+        navName.textContent = student.name;
+        avatar.textContent = student.name.charAt(0).toUpperCase();
+        document.getElementById('loginBtn').textContent = 'Perfil';
+        updateHeroXp(student.xp || 0);
+      } else {
+        navName.textContent = 'Visitante';
+        avatar.textContent = 'V';
+        document.getElementById('loginBtn').textContent = 'Entrar';
+        updateHeroXp(0);
+      }
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      document.getElementById('loginModal').hidden = false;
+    });
+
+    function handleStudentLogin(e) {
+      e.preventDefault();
+      const name = document.getElementById('studentNameInput').value.trim();
+      const email = document.getElementById('studentEmailInput').value.trim().toLowerCase();
+
+      if (!name || !email) return;
+
+      const students = getStudents();
+      let student = students.find(s => s.email === email);
+
+      if (student) {
+        student.name = name;
+      } else {
+        student = { name, email, xp: 0 };
+        students.push(student);
+      }
+
+      saveStudents(students);
+      localStorage.setItem(STORAGE_KEYS.CURRENT_USER, email);
+      closeModal('loginModal');
+      initUser();
+      toast(`Bem-vindo(a), ${name}!`);
+    }
+
+    function addXP(amount) {
+      const email = getCurrentUserEmail();
+      if (!email) {
+        toast('Faça seu login para guardar seus pontos no ranking!');
+        return;
+      }
+
+      const students = getStudents();
+      const student = students.find(s => s.email === email);
+      if (student) {
+        student.xp = (student.xp || 0) + amount;
+        saveStudents(students);
+        initUser();
+        toast(`+${amount} XP Adicionados! ✨`);
+      }
+    }
+
+    function updateHeroXp(xp) {
+      document.getElementById('heroXpText').textContent = `${xp} XP`;
+      const perc = Math.min(100, Math.max(10, (xp / 200) * 100));
+      document.getElementById('heroXpBar').style.width = `${perc}%`;
+    }
+
+    /* ==========================================================================
+       SISTEMA DE QUIZ & SOBREPOSIÇÃO DE PERGUNTAS DO PROFESSOR
+       ========================================================================== */
+    const quizStates = {
+      long: { list: [], index: 0, answered: false },
+      short: { list: [], index: 0, answered: false }
+    };
+
+    function getTeacherQuestions() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.TEACHER_QUESTIONS)) || []; }
+      catch { return []; }
+    }
+
+    function initQuiz() {
+      const teacherQs = getTeacherQuestions()
+        .filter(q => q.type === 'choice')
+        .map(q => ({ ...q, isTeacher: true }));
+      quizStates.long.list = [...teacherQs, ...defaultBiologyQuestions];
+      const quickIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 15, 17, 23, 31];
+      quizStates.short.list = [...teacherQs, ...quickIndexes.map(i => defaultBiologyQuestions[i])];
+      quizStates.long.index = 0;
+      quizStates.short.index = 0;
+      renderQuizQuestion('long');
+      renderQuizQuestion('short');
+    }
+
+    function renderQuizQuestion(mode) {
+      const state = quizStates[mode];
+      const q = state.list[state.index];
+      if (!q) return;
+      state.answered = false;
+      const prefix = mode === 'long' ? 'long' : 'short';
+      document.getElementById(prefix + 'QuizProgress').textContent =
+        `${String(state.index + 1).padStart(2, '0')} / ${String(state.list.length).padStart(2, '0')}`;
+      document.getElementById(prefix + 'QuizBadge').textContent = q.isTeacher
+        ? '⭐ PERGUNTA DO PROFESSOR'
+        : (mode === 'long' ? 'QUIZ COMPLETO DE BIOLOGIA' : 'QUIZ RÁPIDO DE BIOLOGIA');
+      document.getElementById(prefix + 'QuestionText').textContent = q.prompt;
+      const optionsBox = document.getElementById(prefix + 'Options');
+      const feedback = document.getElementById(prefix + 'Feedback');
+      const nextBtn = document.getElementById(prefix + 'Next');
+      optionsBox.innerHTML = '';
+      feedback.hidden = true;
+      nextBtn.disabled = true;
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span class="option-letter">${"ABCD"[idx]}</span> <span>${escapeHTML(optText)}</span>`;
+        btn.addEventListener('click', () => handleQuizAnswer(mode, idx, btn));
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function handleQuizAnswer(mode, chosenIdx, btnEl) {
+      const state = quizStates[mode];
+      if (state.answered) return;
+      state.answered = true;
+      const q = state.list[state.index];
+      const prefix = mode === 'long' ? 'long' : 'short';
+      const feedback = document.getElementById(prefix + 'Feedback');
+      const nextBtn = document.getElementById(prefix + 'Next');
+      const allBtns = document.querySelectorAll(`#${prefix}Options .option-btn`);
+      allBtns.forEach((b, i) => {
+        b.style.pointerEvents = 'none';
+        if (i === q.correct) b.classList.add('correct');
+      });
+      if (chosenIdx === q.correct) {
+        feedback.textContent = `Correto! ${q.explanation || ''}`;
+        feedback.className = 'quiz-feedback success';
+        addXP(15);
+      } else {
+        btnEl.classList.add('wrong');
+        feedback.textContent = `Incorreto. Explicação: ${q.explanation || ''}`;
+        feedback.className = 'quiz-feedback error';
+      }
+      feedback.hidden = false;
+      nextBtn.disabled = false;
+    }
+
+    function advanceQuiz(mode) {
+      const state = quizStates[mode];
+      if (state.index < state.list.length - 1) {
+        state.index++;
+        renderQuizQuestion(mode);
+      } else {
+        toast(mode === 'long' ? 'Você concluiu o desafio completo de Biologia!' : 'Você concluiu a revisão rápida de Biologia!');
+        state.index = 0;
+        renderQuizQuestion(mode);
+      }
+    }
+
+    document.getElementById('longNext').addEventListener('click', () => advanceQuiz('long'));
+    document.getElementById('shortNext').addEventListener('click', () => advanceQuiz('short'));
+
+    function setQuizMode(mode) {
+      const longMode = mode === 'long';
+      document.getElementById('longQuizWindow').hidden = !longMode;
+      document.getElementById('shortQuizWindow').hidden = longMode;
+      document.getElementById('longQuizTab').className = longMode ? 'btn btn-primary' : 'btn btn-dark';
+      document.getElementById('shortQuizTab').className = longMode ? 'btn btn-dark' : 'btn btn-primary';
+    }
+    document.getElementById('longQuizTab').addEventListener('click', () => setQuizMode('long'));
+    document.getElementById('shortQuizTab').addEventListener('click', () => setQuizMode('short'));
+
+    /* ==========================================================================
+       ESTUDO EM GRUPO (SALAS & CHAT EM TEMPO REAL SIMULADO)
+       ========================================================================== */
+    let currentRoomId = null;
+
+    function getRooms() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDY_ROOMS));
+        return (saved && saved.length) ? saved : defaultRooms;
+      } catch { return defaultRooms; }
+    }
+
+    function saveRooms(rooms) {
+      localStorage.setItem(STORAGE_KEYS.STUDY_ROOMS, JSON.stringify(rooms));
+    }
+
+    function getChatMessages() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.CHAT_MESSAGES)) || {}; }
+      catch { return {}; }
+    }
+
+    function saveChatMessages(msgs) {
+      localStorage.setItem(STORAGE_KEYS.CHAT_MESSAGES, JSON.stringify(msgs));
+    }
+
+    function initRooms() {
+      const rooms = getRooms();
+      const roomListEl = document.getElementById('roomList');
+      roomListEl.innerHTML = '';
+
+      rooms.forEach(room => {
+        const div = document.createElement('div');
+        div.className = `room-item ${room.id === currentRoomId ? 'active' : ''}`;
+        div.innerHTML = `<h4>${escapeHTML(room.name)}</h4><p>${escapeHTML(room.desc)}</p>`;
+        div.onclick = () => selectRoom(room.id);
+        roomListEl.appendChild(div);
+      });
+
+      if (!currentRoomId && rooms.length > 0) {
+        selectRoom(rooms[0].id);
+      }
+    }
+
+    function selectRoom(roomId) {
+      currentRoomId = roomId;
+      const rooms = getRooms();
+      const room = rooms.find(r => r.id === roomId);
+      if (!room) return;
+
+      document.getElementById('activeRoomTitle').textContent = room.name;
+      document.getElementById('activeRoomDesc').textContent = room.desc;
+
+      initRooms();
+      renderChatMessages();
+    }
+
+    function renderChatMessages() {
+      const chatBox = document.getElementById('chatMessages');
+      if (!currentRoomId) return;
+
+      const allMsgs = getChatMessages();
+      const msgs = allMsgs[currentRoomId] || [];
+      const user = getCurrentStudent();
+      const currentEmail = getCurrentUserEmail();
+
+      if (msgs.length === 0) {
+        chatBox.innerHTML = `<div style="text-align: center; color: var(--muted); margin-top: 40px; font-size: 13px;">Nenhuma mensagem nesta sala ainda. Seja o primeiro a escrever!</div>`;
+        return;
+      }
+
+      chatBox.innerHTML = msgs.map(m => {
+        const isMe = m.authorEmail === currentEmail;
+        return `
+          <div class="chat-msg ${isMe ? 'sent' : 'received'}">
+            <span class="chat-author">${escapeHTML(m.authorName)}</span>
+            ${escapeHTML(m.text)}
+          </div>
+        `;
+      }).join('');
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text || !currentRoomId) return;
+
+      const user = getCurrentStudent();
+      const authorName = user ? user.name : 'Visitante';
+      const authorEmail = getCurrentUserEmail();
+
+      const allMsgs = getChatMessages();
+      if (!allMsgs[currentRoomId]) allMsgs[currentRoomId] = [];
+
+      allMsgs[currentRoomId].push({
+        text,
+        authorName,
+        authorEmail,
+        timestamp: new Date().toISOString()
+      });
+
+      saveChatMessages(allMsgs);
+      input.value = '';
+      renderChatMessages();
+    }
+
+    function handleChatEnter(e) {
+      if (e.key === 'Enter') sendChatMessage();
+    }
+
+    function openCreateRoomModal() {
+      document.getElementById('createRoomModal').hidden = false;
+    }
+
+    function handleCreateRoomSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('roomNameInput').value.trim();
+      const desc = document.getElementById('roomDescInput').value.trim();
+      if (!name || !desc) return;
+
+      const rooms = getRooms();
+      const newRoom = { id: `room_${Date.now()}`, name, desc };
+      rooms.push(newRoom);
+      saveRooms(rooms);
+
+      closeModal('createRoomModal');
+      document.getElementById('createRoomForm').reset();
+      selectRoom(newRoom.id);
+      toast('Nova sala de estudos criada!');
+    }
+
+    /* ==========================================================================
+       RANKING DOS ALUNOS
+       ========================================================================== */
+    function renderRanking() {
+      const students = getStudents().sort((a, b) => (b.xp || 0) - (a.xp || 0));
+      const podium = document.getElementById('podiumContainer');
+      const list = document.getElementById('rankingList');
+      const count = document.getElementById('studentCountText');
+
+      count.textContent = `${students.length} estudante(s) registrado(s)`;
+
+      if (students.length === 0) {
+        podium.innerHTML = '';
+        list.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--muted);">Nenhum estudante no ranking ainda.</div>`;
+        return;
+      }
+
+      // Pódio (Top 3)
+      const top3Order = [1, 0, 2];
+      const medals = ["🥇", "🥈", "🥉"];
+
+      podium.innerHTML = top3Order.map(idx => {
+        const s = students[idx];
+        if (!s) return `<div></div>`;
+        return `
+          <div class="podium-item ${idx === 0 ? 'first' : ''}">
+            <div class="podium-icon">${medals[idx]}</div>
+            <span class="podium-name">${escapeHTML(s.name)}</span>
+            <span class="podium-xp">${s.xp || 0} XP</span>
+          </div>
+        `;
+      }).join('');
+
+      // Lista geral
+      list.innerHTML = students.map((s, i) => `
+        <div class="ranking-row">
+          <div class="rank-num">${i + 1}º</div>
+          <div class="rank-user">
+            <div class="avatar">${escapeHTML(s.name.charAt(0).toUpperCase())}</div>
+            ${escapeHTML(s.name)} ${s.email === getCurrentUserEmail() ? '<strong>(Você)</strong>' : ''}
+          </div>
+          <div class="rank-pts">${s.xp || 0} XP</div>
+        </div>
+      `).join('');
+    }
+
+    /* ==========================================================================
+       PAINEL DO PROFESSOR (CRIAÇÃO & GERADOR IMPRESSO)
+       ========================================================================== */
+    function toggleTeacherFields() {
+      const type = document.getElementById('teacherType').value;
+      document.getElementById('teacherChoiceGroup').style.display = type === 'choice' ? 'block' : 'none';
+    }
+
+    function handleTeacherSubmit(e) {
+      e.preventDefault();
+      const prompt = document.getElementById('teacherPrompt').value.trim();
+      const type = document.getElementById('teacherType').value;
+      const explanation = document.getElementById('teacherExplanation').value.trim();
+
+      if (!prompt) return;
+
+      const newQ = {
+        id: `t_${Date.now()}`,
+        prompt,
+        type,
+        explanation,
+        createdAt: new Date().toISOString()
+      };
+
+      if (type === 'choice') {
+        const a = document.getElementById('optA').value.trim();
+        const b = document.getElementById('optB').value.trim();
+        const c = document.getElementById('optC').value.trim();
+        const d = document.getElementById('optD').value.trim();
+
+        if (!a || !b || !c || !d) {
+          toast('Preencha as 4 opções de múltipla escolha!');
+          return;
+        }
+
+        newQ.options = [a, b, c, d];
+        newQ.correct = Number(document.getElementById('correctOpt').value);
+      }
+
+      const questions = getTeacherQuestions();
+      questions.push(newQ);
+      localStorage.setItem(STORAGE_KEYS.TEACHER_QUESTIONS, JSON.stringify(questions));
+
+      document.getElementById('teacherForm').reset();
+      toggleTeacherFields();
+      renderTeacherQuestionsList();
+      initQuiz(); // Atualiza a fila do quiz com a nova pergunta no topo
+      toast('Pergunta salva! Ela já está disponível no topo do Quiz.');
+    }
+
+    function renderTeacherQuestionsList() {
+      const container = document.getElementById('teacherQuestionsList');
+      const questions = getTeacherQuestions();
+
+      if (questions.length === 0) {
+        container.innerHTML = `<div style="color: var(--muted); font-size: 13px;">Nenhuma pergunta cadastrada pelo professor.</div>`;
+        return;
+      }
+
+      container.innerHTML = questions.map((q, i) => `
+        <div class="q-item">
+          <div class="q-item-info">
+            <b>${i + 1}. ${escapeHTML(q.prompt)}</b>
+            <span>Tipo: ${q.type === 'choice' ? 'Múltipla Escolha' : 'Resposta Escrita'}</span>
+          </div>
+          <button class="btn btn-ghost btn-small" onclick="deleteTeacherQuestion('${q.id}')">Excluir</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteTeacherQuestion(id) {
+      let questions = getTeacherQuestions();
+      questions = questions.filter(q => q.id !== id);
+      localStorage.setItem(STORAGE_KEYS.TEACHER_QUESTIONS, JSON.stringify(questions));
+      renderTeacherQuestionsList();
+      initQuiz();
+      toast('Pergunta removida.');
+    }
+
+    // Gerador de Folha Impressa / PDF
+    function generatePrintablePDF() {
+      const questions = getTeacherQuestions();
+      if (questions.length === 0) {
+        toast('Cadastre pelo menos uma pergunta antes de imprimir!');
+        return;
+      }
+
+      const title = document.getElementById('printTitle').value || "Atividade de Biologia";
+
+      const content = questions.map((q, i) => {
+        let qHtml = `<li style="margin-bottom: 25px;"><p style="font-weight: bold; font-size: 15px;">${i + 1}. ${escapeHTML(q.prompt)}</p>`;
+        
+        if (q.type === 'choice' && q.options) {
+          qHtml += `<ol type="A" style="margin-left: 20px; margin-top: 8px;">`;
+          q.options.forEach(opt => {
+            qHtml += `<li style="margin: 4px 0;">${escapeHTML(opt)}</li>`;
+          });
+          qHtml += `</ol>`;
+        } else {
+          // Linhas para resposta escrita
+          qHtml += `
+            <div style="margin-top: 12px;">
+              <div style="height: 28px; border-bottom: 1px solid #666;"></div>
+              <div style="height: 28px; border-bottom: 1px solid #666;"></div>
+              <div style="height: 28px; border-bottom: 1px solid #666;"></div>
+            </div>
+          `;
+        }
+
+        qHtml += `</li>`;
+        return qHtml;
+      }).join('');
+
+      const win = window.open('', '_blank');
+      if (!win) {
+        toast('Habilite os pop-ups para gerar a folha impressa.');
+        return;
+      }
+
+      win.document.write(`
+        <!doctype html>
+        <html lang="pt-BR">
+        <head>
+          <meta charset="utf-8">
+          <title>${escapeHTML(title)}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; color: #111; line-height: 1.5; }
+            h1 { text-align: center; font-size: 20px; margin-bottom: 20px; text-transform: uppercase; }
+            .box-header { border: 1px solid #000; padding: 12px; margin-bottom: 30px; font-size: 14px; }
+            ol { padding-left: 20px; }
+          </style>
+        </head>
+        <body>
+          <h1>${escapeHTML(title)}</h1>
+          <div class="box-header">
+            <strong>Nome do Aluno:</strong> ____________________________________________________<br><br>
+            <strong>Data:</strong> ____ / ____ / ________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Turma:</strong> ____________
+          </div>
+          <ol>${content}</ol>
+          <script>window.onload = () => { window.print(); }<\/script>
+        </body>
+        </html>
+      `);
+      win.document.close();
+    }
+
+    function escapeHTML(str) {
+      return String(str ?? '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+  </script>
+</body>
+</html>
